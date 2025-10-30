@@ -5,7 +5,7 @@ This project is a submission for the [Playground Series - Season 5, Episode 10](
 ## Project Goal
 The goal was to predict the `accident_risk` (a continuous, probabilistic value between 0 and 1) based on various features of a road segment, such as road type, lighting, weather, and speed limit.
 
-## Our Workflow
+## Workflow
 
 1.  **Exploratory Data Analysis (EDA):** Loaded the data using `pandas` and analyzed the features. I visualized and gathered descriptions of the target variable (`accident_risk`) and features to see their relationship with the target by using `seaborn` and `matplotlib`.
 
