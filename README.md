@@ -54,8 +54,8 @@ The `Optuna` tuning study successfully found a more generalized and higher perfo
 
 1.  Clone this repository:
     ```bash
-    git clone [https://github.com/MarcusHanmer1/Road-Accident_Risk-Project]
-    cd [Road-Accident_Risk-Project]
+    git clone https://github.com/MarcusHanmer1/Road-Accident_Risk-Project
+    cd Road-Accident_Risk-Project
     ```
 2.  Install the required libraries:
     ```bash
