@@ -1,37 +1,76 @@
-# Kaggle Competition: Road Accident Risk Prediction
+# Road Accident Risk Project
 
-This project is a submission for the [Playground Series - Season 5, Episode 10](https://www.kaggle.com/competitions/playground-series-s5e10) on Kaggle.
+This project builds a high-performance machine learning model to predict the probabilistic risk of a road accident on a given segment. The model was optimized using `XGBoost` and `Optuna` to achieve top-tier results.
 
-## Project Goal
-The goal was to predict the `accident_risk` (a continuous, probabilistic value between 0 and 1) based on various features of a road segment, such as road type, lighting, weather, and speed limit.
+**This project was developed as part of a Kaggle competition, and I imagined the theoretical goal would be to build a tool that could be used by city planners etc to identify and mitigate high-risk areas.**
 
-## Workflow
+> **View the main analysis notebook:** `[predicting-road-accident-risk-with-xgboost.ipynb]`
 
-1.  **Exploratory Data Analysis (EDA):** Loaded the data using `pandas` and analyzed the features. I visualized and gathered descriptions of the target variable (`accident_risk`) and features to see their relationship with the target by using `seaborn` and `matplotlib`.
+![Feature importance plot](feature_importance.png)
 
-2.  **Feature Engineering:** To capture more complex relationships in the data, I created new interaction and polynomial features. This included:
-    * `accidents_per_lane`: A ratio to normalize accident counts by road size.
-    * `weather_and_time`: A categorical interaction feature (e..g, 'Rain\_Night').
-    * `square_speed`: A polynomial feature to capture the non-linear risk of higher speeds.
+---
 
-3.  **Data Processing:**
-    * Converted boolean (True/False) columns into integers (1/0).
-    * Used sklearn's ColumnTransformer to precisely manage preprocessing.
-    * Categorical features (`road_type`, `weather`, etc.) were One Hot Encoded.
-    * Numerical and boolean features were passed through to the model.
+### Tech stack
 
-4.  **Modelling & Validation:**
-    * **Model:** I used the XGBoost Regressor, a powerful gradient-boosting model.
-    * **Validation:** Instead of a single train-test split, I implemented a robust 10 Fold Cross Validation strategy. This involves training 10 separate models on different 90% "folds" of the data. This provides a much more stable and reliable measure of the model's true performance and prevents overfitting to a single "lucky" validation set.
+* **Data analysis:** `pandas`, `numpy`
+* **Data visualization:** `seaborn`, `matplotlib`
+* **Preprocessing:** `scikit-learn`
+* **Modeling:** `XGBoost`
+* **Optimization:** `Optuna`
+* **Validation:** `scikit-learn KFold`
 
-5.  **Hyperparameter Tuning:**
-    * To find the best possible settings for the XGBoost model, I used Optuna, a Bayesian optimization framework.
-    * Optuna automatically tested dozens of hyperparameter combinations (like `learning_rate`, `max_depth`, `subsample`, etc.) over several hours.
-    * For each combination, it ran our entire 10-fold CV to get a true, reliable score, using the GPU (`tree_method='hist', device='cuda'`) to accelerate the process.
+---
 
-## Evaluation
-The model was evaluated using the competition metric: Root Mean Squared Error (RMSE). A lower RMSE is better.
+### The goal 
 
-## Results
-* **Baseline Model:** Our robust 10-fold CV on the un-tuned model with new features achieved an RMSE of **0.05619**.
-* **Final Tuned Model:** After the Optuna study, the final optimized model achieved an RMSE of **0.05603**, with a test result of **0.05555**.
+The goal was to predict `accident_risk` (a continuous value from 0 to 1) based on features like road type, weather, lighting, and speed limits.
+
+#### 1. Feature Engineering
+To capture more complex relationships, I engineered new features:
+* `accidents_per_lane`: A ratio to normalize accident counts by road size.
+* `weather_and_time`: An interaction feature (e.g., 'Rain_Night').
+* `square_speed`: A polynomial feature to capture the non-linear risk of higher speeds.
+
+#### 2. Modeling and Tuning
+I chose the `XGBoost Regressor` for its high performance. To find the best possible version of this model, I:
+* **Implemented 10 fold Cross validation:** This provides a much more stable and reliable measure of model performance by training and testing 10 different models on different slices of the data.
+* **Used `Optuna` for Bayesian optimization:** Instead of guessing hyperparameters, I used `Optuna` to automatically test dozens of combinations (`learning_rate`, `max_depth`, etc) over several hours, accelerated by the GPU.
+
+---
+
+### Results
+
+The model was evaluated on **Root Mean Squared Error (RMSE)**, where lower is better.
+
+* **Baseline:** `0.05619`
+* **Final:** `0.05603`
+* **Competition test set:** `0.05555`
+
+The `Optuna` tuning study successfully found a more generalized and higher performing set of hyperparameters.
+
+---
+
+### How to Run This Project
+
+1.  Clone this repository:
+    ```bash
+    git clone [https://github.com/MarcusHanmer1/Road-Accident_Risk-Project]
+    cd [Road-Accident_Risk-Project]
+    ```
+2.  Install the required libraries:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  Open and run the Jupyter Notebook:
+    ```bash
+    jupyter notebook
+    ```
+
+---
+
+### What I learned
+
+* **Validation:** A single train/test split is unreliable. 10-Fold Cross-Validation gives a true picture of a model's performance.
+* **Systematic tuning:** `Optuna` is incredibly powerful for hyperparameter tuning.
+* **Feature Engineering is key:** The engineered features were consistently ranked as highly important by the final `XGBoost` model.
+* **Full ML pipeline:** I managed the entire process from messy data in `pandas` to a highly-optimized, production-ready model using `XGBoost` and `scikit-learn` pipelines.
